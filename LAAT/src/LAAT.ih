@@ -2,15 +2,12 @@
 
 #include <iterator>
 #include <iostream>
-
-template <typename T>
-std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
-  if ( !v.empty() ) {
-    out << '[';
-    std::copy (v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
-    out << "\b\b]";
-  }
-  return out;
-}
+#include <omp.h>
 
 using namespace std;
+
+/*
+  global variable that counts the number of lost ants to possible give the
+  user a warning.
+*/
+extern size_t lostAnts;

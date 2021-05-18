@@ -34,11 +34,12 @@ size_t RangeSearch(vector<DataPoint> &data, float radius, size_t threshold)
   my_kd_tree_t mat_index(data[0].size() /* dim */, data);
   mat_index.index->buildIndex();
 
-  std::vector<std::pair<size_t, float>> ret_matches;
-
   vector<size_t> sizes(data.size());
+#pragma omp parallel for shared(data, mat_index, sizes)
   for (size_t idx = 0; idx < data.size(); ++idx)
   {
+//    cout << omp_get_thread_num() << ' ' << omp_get_num_threads() << '\n';
+    std::vector<std::pair<size_t, float>> ret_matches;
     DataPoint &dataPoint = data[idx];
 
     // find neighbors

@@ -47,6 +47,11 @@ inline float DataPoint::getPheromone()    const
   return d_pheromone;
 }
 
+inline float &DataPoint::pheromone()
+{
+  return d_pheromone;
+}
+
 inline void DataPoint::addPheromone(float pheromone)
 {
   d_pheromone += pheromone;

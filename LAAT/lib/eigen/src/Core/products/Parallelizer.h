@@ -159,7 +159,7 @@ void parallelize_gemm(const Functor& func, Index rows, Index cols, Index depth, 
       ++errorCount;
     }
   }
-  if (errorCount) EIGEN_THROW_X(Eigen::eigen_assert_exception());
+  eigen_assert(errorCount == 0);
 #endif
 }
 

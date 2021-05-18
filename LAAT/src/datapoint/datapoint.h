@@ -36,6 +36,7 @@ public:
   void setPheromone(float pheromone);
   float getPheromone()    const;
 
+  float &pheromone();
   void addPheromone(float pheromone);
 
   void deactivate();

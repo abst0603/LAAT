@@ -6,28 +6,27 @@
 
 vector<DataPoint> readdata(string name_of_file)
 {
-  ifstream infile(name_of_file);
-  if (!infile)
-    cerr << "Could not open file!\n";
+  ifstream inFile(name_of_file);
+  if (!inFile)
+    cerr << "Could not open file\n";
 
-  string line;
-  int i = 0;
-  DataPoint v;
-  int linelength, lines, linee;
+  DataPoint datapoint;
   vector<DataPoint> data;
-  while(getline(infile,line)){
-    linelength = line.length();
-    lines = 0;
-    i = 0;
-    linee = line.find(',');
-    while(linee>0){
-      v[i] = stof(line.substr(lines,linee));
-      i++;
-      lines = linee+1;
-      linee = line.find(',',linee+2);
+  string line;
+  while (getline(inFile, line))
+  {
+    stringstream ss(line);
+    float val;
+    for (size_t i = 0; i < 3; ++i)
+    {
+      ss >> val;
+      datapoint[i] = val;
+
+      // ignore commas
+      if (ss.peek() == ',')
+	ss.ignore();
     }
-    v[2] = stof(line.substr(lines,linelength));
-    data.push_back(v);
+    data.push_back(datapoint);
   }
   return data;
 }

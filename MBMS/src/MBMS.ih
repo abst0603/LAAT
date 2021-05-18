@@ -1,0 +1,12 @@
+#include "MBMS.h"
+using namespace std;
+
+#include <fstream>
+
+typedef nanoflann::KDTreeSingleIndexAdaptor<
+  nanoflann::L2_Simple_Adaptor<float, PointCloud<float>>,
+  PointCloud<float>,
+  3 /* dim */
+  > RS_kd_tree;
+
+typedef KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<float>>, float>  KNN_kd_tree;

@@ -8,7 +8,7 @@
  * When the function is done data points contain the amount of pheromone obtained 
  * in the search.
  *
- * In this function and all of the function evoked by this one we will refer to the
+ * In this function and all of the functions evoked by this one we will refer to the
  * formulas as described by Taghribi et al. (2020).
  *
  * Reference:
@@ -21,6 +21,11 @@
  */
 void LocallyAlignedAntTechnique(vector<DataPoint> &data, Options options)
 {
+  // set amount of lost ants to zero, only used to provide warnings/
+  lostAnts = 0;
+  
+  omp_set_num_threads(8);
+  Eigen::initParallel();
   // preprocess
   cout << "Preprocessing...\n";
   size_t medianvalue =
@@ -48,4 +53,8 @@ void LocallyAlignedAntTechnique(vector<DataPoint> &data, Options options)
     updateProgressBar(loop);
   }
   completeProgressBar();
+
+  // possibly warn user
+  if (lostAnts)
+    printWarning(ants.size() * options.numberOfIterations * options.numberOfSteps);
 }

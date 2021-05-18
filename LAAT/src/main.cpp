@@ -3,8 +3,8 @@
 int main(int argc, char **argv)
 {
   // Use random seed, or constant seed for constant results
-  //srand(random_device()());
-  srand(42);
+  srand(random_device()());
+  //srand(42);
 
   // process input
   if (argc < 3)

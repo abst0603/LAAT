@@ -3,7 +3,7 @@
 /*
   Functions implementing a simple progress bar to show
   progress of the iterative step.
-*/
+ */
 
 void initializeProgressBar(size_t size)
 {

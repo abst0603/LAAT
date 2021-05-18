@@ -1,18 +1,20 @@
 CC = /usr/bin/g++
-CFLAGS = -std=c++14 -Wall -O2
+CFLAGS = -std=c++14 -Wall -O2 -fopenmp
 SRC = $(wildcard src/*.cpp) $(wildcard src/datapoint/*.cpp)
 OBJECTS = $(patsubst src/%.cpp, bin/%.o, $(SRC))
+dir_guard=@mkdir -p $(@D)
 
-all: clearscreen antPCA
+all: clearscreen LAAT
 
-antPCA: $(OBJECTS)
+LAAT: $(OBJECTS)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 bin/%.o: src/%.cpp $(DEPS)
+	@mkdir -p $(@D)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 clearscreen:
 	reset
 
 clean:
-	rm -f antPCA bin/*.o bin/datapoint/*.o
+	rm -f LAAT -r bin
