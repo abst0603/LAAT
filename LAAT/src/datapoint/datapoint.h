@@ -3,6 +3,7 @@
 
 #include <array>
 #include <vector>
+#include <cstddef>
 
 /**
  * Auxiliary class that allows the storage of a data point, it's neighborhood,
@@ -22,7 +23,7 @@ class DataPoint: public std::array<float, 3>
 
 public:
   DataPoint();
-  
+
   void resizeNeighbors(size_t size);
   void addNeighbor(size_t idx, unsigned int neighborIdx);
   std::vector<unsigned int> const &getNeighbors()    const;

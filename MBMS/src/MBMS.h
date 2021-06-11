@@ -8,25 +8,36 @@
 #include "utils.h"
 #include <iosfwd>
 
-void convertTocloud(PointCloud<float> &point, std::vector<std::vector<float>> &data);
+void MBMS(std::vector<std::vector<float>> &data,
+	  float radius = 0.5,
+	  float sigma = 0.25,
+	  size_t k = 10);
+
+void convertToCloud(PointCloud<float> &point, std::vector<std::vector<float>> &data);
 
 
-void denoise(std::vector<std::vector<float>> &data,
-             std::vector<unsigned int> &indices,
-             std::vector<float> &evalue,
-             std::vector<std::vector<float>> &evector,
-             float sigma2, unsigned int idx, std::vector<std::vector<float>> &dataout);
+void denoise(std::vector<std::vector<float>> const &data,
+             std::vector<size_t> const &indices,
+             std::vector<float> const &evalue,
+             std::vector<std::vector<float>> const &evector,
+	     std::vector<std::vector<float>> &dataUpdate,
+	     float sigma,
+	     size_t dix);
 
-void localPCA(std::vector<std::vector<float>> &data,
-              std::vector<unsigned int> &indices,
-              std::vector<float> &v,
-              std::vector<std::vector<float>> &tmpvec);
+void localPCA(std::vector<std::vector<float>> const &data,
+              std::vector<size_t> const &indices,
+              std::vector<float> &eigenValue,
+              std::vector<std::vector<float>> &eigenVector);
 
-void dimensionalityApproximation(std::vector<float> &evalue, int &dim, float &error);
+void dimensionalityApproximation(std::vector<float> const &evalue,
+				 size_t &dim,
+				 float &error);
 
-void kernelFunMean(std::vector<std::vector<float>> &data,
-		   std::vector<unsigned int> &indices,
-		   std::vector<float> &kernelmean, int idx, float sigma);
+void kernelFunMean(std::vector<std::vector<float>> const &data,
+		   std::vector<size_t> const &indices,
+		   std::vector<float> &kernelmean,
+		   size_t idx,
+		   float sigma);
 
 std::vector<std::vector<float>> readCSV(std::string const &name_of_file, size_t dim);
 

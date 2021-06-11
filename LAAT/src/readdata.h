@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <array>
+#include <cstddef>
+#include <string>
+
 class DataPoint;
 
 struct Options

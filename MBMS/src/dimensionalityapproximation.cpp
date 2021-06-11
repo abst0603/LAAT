@@ -1,25 +1,27 @@
 #include "MBMS.ih"
 
-void dimensionalityApproximation(vector<float> &evalue, int &dim, float &error)
+void dimensionalityApproximation(vector<float> const &evalue,
+				 size_t &dim,
+				 float &error)
 {
-  int D = evalue.size();
-  dim = 0;
-  error = 0;
-  float Max = evalue[0] - evalue[1];
+  size_t D = evalue.size();
+  float max = evalue[0] - evalue[1];
 
-  for(int i = 1; i < D - 1; ++i)
-    if (Max < evalue[i] - evalue[i + 1])
+  dim = 0;
+  for (size_t i = 1; i < D - 1; ++i)
+    if (max < evalue[i] - evalue[i + 1])
     {
-      Max = evalue[i] - evalue[i + 1];
+      max = evalue[i] - evalue[i + 1];
       dim = i;
     }
 
-  if (Max < evalue[D - 1])
+  if (max < evalue[D - 1])
   {
-    Max = evalue[D - 1];
+    max = evalue[D - 1];
     dim = D - 1;
   }
 
-  for(int i = dim + 1; i < D; ++i)
+  error = 0;
+  for (size_t i = dim + 1; i < D; ++i)
     error += evalue[i];
 }

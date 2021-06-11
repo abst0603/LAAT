@@ -29,31 +29,29 @@ size_t RangeSearch(vector<DataPoint> &data, float radius, size_t threshold)
   radius = radius * radius;
 
   typedef KDTreeVectorOfVectorsAdaptor<
-    std::vector<DataPoint>, float> my_kd_tree_t;
+    vector<DataPoint>, float> KDTree;
   
-  my_kd_tree_t mat_index(data[0].size() /* dim */, data);
-  mat_index.index->buildIndex();
+  KDTree KNN(data[0].size() /* dim */, data);
+  KNN.index->buildIndex();
 
   vector<size_t> sizes(data.size());
-#pragma omp parallel for shared(data, mat_index, sizes)
   for (size_t idx = 0; idx < data.size(); ++idx)
   {
-//    cout << omp_get_thread_num() << ' ' << omp_get_num_threads() << '\n';
-    std::vector<std::pair<size_t, float>> ret_matches;
+    vector<pair<size_t, float>> matches;
     DataPoint &dataPoint = data[idx];
 
     // find neighbors
-    size_t nMatches = mat_index.index->radiusSearch(&dataPoint[0],
-						    radius,
-						    ret_matches,
-						    SearchParams());
+    size_t nMatches = KNN.index->radiusSearch(&dataPoint[0],
+					      radius,
+					      matches,
+					      SearchParams());
     sizes[idx] = nMatches - 1;
     if (nMatches > threshold)
     {
       // store neighbors
       dataPoint.resizeNeighbors(nMatches - 1);
       for (size_t j = 1; j < nMatches; ++j)  // add all neighbors but not the point itself
-	dataPoint.addNeighbor(j - 1, ret_matches[j].first);
+	dataPoint.addNeighbor(j - 1, matches[j].first);
     }
     else
       dataPoint.deactivate();

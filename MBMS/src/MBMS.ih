@@ -2,6 +2,7 @@
 using namespace std;
 
 #include <fstream>
+#include <random>
 
 typedef nanoflann::KDTreeSingleIndexAdaptor<
   nanoflann::L2_Simple_Adaptor<float, PointCloud<float>>,
@@ -9,4 +10,4 @@ typedef nanoflann::KDTreeSingleIndexAdaptor<
   3 /* dim */
   > RS_kd_tree;
 
-typedef KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<float>>, float>  KNN_kd_tree;
+typedef KDTreeVectorOfVectorsAdaptor<vector<vector<float>>, float> KNN_kd_tree;

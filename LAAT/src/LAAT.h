@@ -21,8 +21,8 @@ void LocallyAlignedAntTechnique(std::vector<DataPoint> &data,
 
 // preprocessing functions
 size_t preprocess(std::vector<DataPoint> &data,
-		size_t threshold,
-		float radius);
+		size_t radius,
+		float threshold);
 size_t RangeSearch(std::vector<DataPoint> &data,
 		   float radius,
 		   size_t threshold);

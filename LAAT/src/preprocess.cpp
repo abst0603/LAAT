@@ -13,8 +13,8 @@
  * @return median neighborhood size of all data points
  */
 size_t preprocess(vector<DataPoint> &data,
-		  size_t threshold,
-		  float radius)
+		  size_t radius,
+		  float threshold)
 {
   // find the local neighborhood of all data points.
   size_t medianvalue = RangeSearch(data, radius, threshold);
@@ -41,7 +41,7 @@ size_t preprocess(vector<DataPoint> &data,
 	meanvec(dim) = X.middleCols<1>(dim).mean();
 
       X = X.rowwise() - meanvec;
-      meanvec.resize(0);  // this is the destructor
+      meanvec.resize(0);  // destructor
       
       Eigen::BDCSVD<Eigen::MatrixXf> svd(X, Eigen::ComputeThinV);
 
@@ -49,9 +49,9 @@ size_t preprocess(vector<DataPoint> &data,
       Eigen::RowVectorXf svalue(3);
       svalue = svd.singularValues();
       Eigen::Matrix3f svector;
-      svector = svd.matrixV();
-      svalue = svalue.array().pow(2); // eigen values are the second power of singular values
-      svalue = svalue.array() / svalue.sum(); // normalize eigen values
+      svector = svd.matrixV();          // eigen vectors are in columns
+      svalue = svalue.array().pow(2);   // second power of singular values
+      svalue = svalue.array() / svalue.sum();  // normalize eigen values
       
       eigenValues = {{svalue(0), svalue(1), svalue(2)}};
       svalue.resize(0);

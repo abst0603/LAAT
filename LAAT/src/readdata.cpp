@@ -1,8 +1,9 @@
+#include "readdata.ih"
 #include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "readdata.ih"
+#include <sstream>
 
 vector<DataPoint> readdata(string name_of_file)
 {
