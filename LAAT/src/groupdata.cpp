@@ -8,7 +8,7 @@
  * @param options struct containing the values of the hyper-parameters
  * @return        vector containing the sector number for each data point
  */
-vector<unsigned int> groupdata(vector<DataPoint> const &data,
+vector<unsigned int> groupdata(vector<vector<float>> const &data,
 			       Options const &options)
 {
   // compute extremes of the data

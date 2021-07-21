@@ -2,19 +2,19 @@
   All inline member functions of the class DataPoint.
  */
 
-inline void DataPoint::resizeNeighbors(size_t size)
+inline void DataPoint::resizeNeighbours(size_t size)
 {
-  d_neighbors.resize(size);
+  d_neighbours.resize(size);
 }
 
-inline std::vector<unsigned int> const &DataPoint::getNeighbors()    const
+inline std::vector<unsigned int> const &DataPoint::getNeighbours()    const
 {
-  return d_neighbors;
+  return d_neighbours;
 }
 
-inline void DataPoint::addNeighbor(size_t idx, unsigned int neighborIdx)
+inline void DataPoint::addNeighbour(size_t idx, unsigned int neighbourIdx)
 {
-  d_neighbors[idx] = neighborIdx;
+  d_neighbours[idx] = neighbourIdx;
 }
 
 inline void DataPoint::setEigenVectors(eigenVectors_t &eigenVectors)

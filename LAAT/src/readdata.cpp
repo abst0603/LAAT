@@ -5,14 +5,14 @@
 #include <fstream>
 #include <sstream>
 
-vector<DataPoint> readdata(string name_of_file)
+vector<vector<float>> const readdata(string name_of_file)
 {
   ifstream inFile(name_of_file);
   if (!inFile)
     cerr << "Could not open file\n";
 
-  DataPoint datapoint;
-  vector<DataPoint> data;
+  vector<float> datapoint(3);
+  vector<vector<float>> data;
   string line;
   while (getline(inFile, line))
   {
@@ -70,12 +70,12 @@ Options readOptions(string name_of_file)
   return options;
 }
 
-void writeCSV(string name_of_file, vector<DataPoint> const &data)
+void writeCSV(string name_of_file, vector<float> const &pheromone)
 {
   ofstream outputfile;
   outputfile.open(name_of_file);
-  for (size_t i = 0; i < data.size(); ++i)
-    outputfile << data[i].getPheromone() << '\n';
+  for (size_t i = 0; i < pheromone.size(); ++i)
+    outputfile << pheromone[i] << '\n';
 
   outputfile.close();
 }

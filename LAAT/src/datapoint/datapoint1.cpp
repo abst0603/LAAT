@@ -5,7 +5,7 @@
  */
 DataPoint::DataPoint()
   :
-  d_neighbors(0),
+  d_neighbours(0),
   d_eigenVectors(),
   d_eigenValues(),
   d_pheromone(1.0),

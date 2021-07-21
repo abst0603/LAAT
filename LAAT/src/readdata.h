@@ -6,8 +6,6 @@
 #include <cstddef>
 #include <string>
 
-class DataPoint;
-
 struct Options
 {
     size_t numberOfAntsX;
@@ -25,8 +23,8 @@ struct Options
     float lowerlimit;
 };
 
-std::vector<DataPoint> readdata(std::string name_of_file);
-void writeCSV(std::string name_of_file, std::vector<DataPoint> const &data);
+std::vector<std::vector<float>> const readdata(std::string name_of_file);
+void writeCSV(std::string name_of_file, std::vector<float> const &pheromone);
 Options readOptions(std::string name_of_file);
 
 #endif

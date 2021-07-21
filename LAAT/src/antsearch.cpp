@@ -15,16 +15,20 @@
  *   searching from
  * @param options struct containing the values of the hyper-parameters
  */
-void antSearch(vector<DataPoint> &data,
-	       vector<DataPoint *> const &ants,
-	       Options const &options)
+void antSearch(vector<vector<float>> const &data,
+	       vector<vector<unsigned int>> const &neighbourhoods,
+	       vector<unsigned int> const &antLocations,
+	       vector<vector<vector<float>>> const &eigenVectors,
+	       vector<vector<float>> const &eigenValues,
+	       Options const &options,
+  	       vector<float> &pheromone)
 {
 #pragma omp parallel for
-  for (size_t ant = 0; ant < ants.size(); ++ant)
+  for (unsigned int antLocation : antLocations)
   {
     vector<float> accumulatedPheromone(data.size(), 0);
     
-    DataPoint *nextPoint = ants[ant];
+    unsigned int current = antLocation;
 
     vector<float> V;
     vector<float> P;
@@ -32,47 +36,47 @@ void antSearch(vector<DataPoint> &data,
     for (size_t i = 1; i < options.numberOfSteps; ++i)
     {
       /*
-	From current point, select the next point from it's neighborhood
+	From current point, select the next point from it's neighbourhood
 	with probabilities as defined in formula (8).
       */
-      DataPoint &currentPoint = *nextPoint;
-      size_t neighborhoodSize = currentPoint.getNeighbors().size();
-      vector<array<float, 3>> relativeDistances(neighborhoodSize);
+      vector<float> const &currentPoint = data[current];
+      vector<unsigned int> const &neighbourhood = neighbourhoods[current];
+      vector<array<float, 3>> relativeDistances(neighbourhood.size());
 
-      V.resize(neighborhoodSize);
-      P.resize(neighborhoodSize);
+      V.resize(neighbourhood.size());
+      P.resize(neighbourhood.size());
 
-      float sumPheromone = 0;  // total pheromone in local neighborhood
-      for (size_t neighborIdx = 0; neighborIdx < neighborhoodSize; ++neighborIdx)
+      float sumPheromone = 0;  // total pheromone in local neighbourhood
+      for (size_t neighbourIdx = 0; neighbourIdx < neighbourhood.size(); ++neighbourIdx)
       {
-	DataPoint &neighbor = data[currentPoint.getNeighbors()[neighborIdx]];
-	sumPheromone += neighbor.getPheromone();
+	vector<float> const &neighbour = data[neighbourhood[neighbourIdx]];
+	sumPheromone += pheromone[neighbourhood[neighbourIdx]];
 	
 	for (size_t dim = 0; dim < 3; ++dim)
-	  relativeDistances[neighborIdx][dim] = neighbor[dim] - currentPoint[dim];
+	  relativeDistances[neighbourIdx][dim] = neighbour[dim] - currentPoint[dim];
 	
 	// normalize distance
 	float norm = sqrt(
-	  relativeDistances[neighborIdx][0] * relativeDistances[neighborIdx][0] +
-	  relativeDistances[neighborIdx][1] * relativeDistances[neighborIdx][1] +
-	  relativeDistances[neighborIdx][2] * relativeDistances[neighborIdx][2]);
+	  relativeDistances[neighbourIdx][0] * relativeDistances[neighbourIdx][0] +
+	  relativeDistances[neighbourIdx][1] * relativeDistances[neighbourIdx][1] +
+	  relativeDistances[neighbourIdx][2] * relativeDistances[neighbourIdx][2]);
 
-	for (float &dim : relativeDistances[neighborIdx])
+	for (float &dim : relativeDistances[neighbourIdx])
 	  dim /= norm;
       }
 
       /*
-	Compute alignment between the data point and it's neighbors with
+	Compute alignment between the data point and it's neighbours with
 	the eigen-directions.
       */
-      vector<array<float, 3>> w(neighborhoodSize);
+      vector<array<float, 3>> w(neighbourhood.size());
       // matrix multiplication
-      for (size_t neighbor = 0; neighbor < neighborhoodSize; ++neighbor)
+      for (size_t neighbour = 0; neighbour < neighbourhood.size(); ++neighbour)
 	for (size_t j = 0; j < 3; ++j)
-	  w[neighbor][j] = abs(
-	    relativeDistances[neighbor][0] * currentPoint.getEigenVectors()[0][j] +
-	    relativeDistances[neighbor][1] * currentPoint.getEigenVectors()[1][j] +
-	    relativeDistances[neighbor][2] * currentPoint.getEigenVectors()[2][j]);
+	  w[neighbour][j] = abs(
+	    relativeDistances[neighbour][0] * eigenVectors[current][0][j] +
+	    relativeDistances[neighbour][1] * eigenVectors[current][1][j] +
+	    relativeDistances[neighbour][2] * eigenVectors[current][2][j]);
 
       /*
 	Normalize alignment values to obtain relative weighting of the
@@ -87,42 +91,43 @@ void antSearch(vector<DataPoint> &data,
       }
 
       /*
-	For each data point, compute the preference of moving to it's neighbors
+	For each data point, compute the preference of moving to it's neighbours
 	according to formula (4).
       */
-      vector<float> E(neighborhoodSize);
+      vector<float> E(neighbourhood.size());
       float sumE = 0;
       // matrix-vector multiplication
-      for (size_t j = 0; j < neighborhoodSize; ++j)
+      for (size_t j = 0; j < neighbourhood.size(); ++j)
       {
-	E[j] = w[j][0] * currentPoint.getEigenValues()[0] +
-	  w[j][1] * currentPoint.getEigenValues()[1] +
-	  w[j][2] * currentPoint.getEigenValues()[2];
+	E[j] = w[j][0] * eigenValues[current][0] +
+	  w[j][1] * eigenValues[current][1] +
+	  w[j][2] * eigenValues[current][2];
 	sumE += E[j];
       }
 
       float sumV = 0.0;
       /*
 	calculate movement preference from the current point to all
-	of it's neighbors using formula (7).
+	of it's neighbours using formula (7).
       */    
-      for (size_t j = 0; j < neighborhoodSize; ++j)
+      for (size_t j = 0; j < neighbourhood.size(); ++j)
       {
-	DataPoint &neighbor = data[currentPoint.getNeighbors()[j]];
-	if (neighbor.isActive())
+	unsigned int neighbour = neighbourhood[j];
+	if (!neighbourhoods[neighbour].empty())  // neighbour is active
 	{
 	  // calculate normalized pheromone as defined in formula (6).
-	  float pheromone = neighbor.getPheromone() / sumPheromone;
+	  float normalizedPheromone =
+	    pheromone[neighbour] / sumPheromone;
 
 	  /*
-	    Normalize movement preferences within the neighborhood to obtain the
+	    Normalize movement preferences within the neighbourhood to obtain the
 	    relative preference according to formula (5).
 	  */
 	  float preference = E[j] / sumE;
 
 	  // formula (7)
 	  V[j] = exp(
-	    options.beta * ((1 - options.kappa) * pheromone +
+	    options.beta * ((1 - options.kappa) * normalizedPheromone +
 			    options.kappa * preference)
 	    );
 	  sumV += V[j];
@@ -132,13 +137,13 @@ void antSearch(vector<DataPoint> &data,
       }
       
       /*
-	Calculate jump probabilities to all of the current point's neighbors,
+	Calculate jump probabilities to all of the current point's neighbours,
 	store as cummulative probabilities for easy selection.
       */
       float cummulativeProbability = 0.0;
       size_t itemp = 0;
       float randnum = (float) rand() / (RAND_MAX);
-      while ((itemp + 1) < neighborhoodSize)
+      while ((itemp + 1) < neighbourhood.size())
       {
 	cummulativeProbability += V[itemp] / sumV;
 	if (cummulativeProbability > randnum)
@@ -147,18 +152,17 @@ void antSearch(vector<DataPoint> &data,
 	++itemp;
       }
 
-      // store pointer to next data point to visit
-      nextPoint = &data[currentPoint.getNeighbors()[itemp]];
+      current = neighbourhood[itemp];
 
-      // if there are no active neighbors, update counter for sake of warning the user
-      if (!nextPoint->isActive())
+      // if there are no active neighbours, update counter for sake of warning the user
+      if (neighbourhoods[current].empty())
       {
         ++lostAnts;
 	break;
       }
 
       // keep track of pheromone to be added
-      accumulatedPheromone[currentPoint.getNeighbors()[itemp]] += options.p_release;
+      accumulatedPheromone[current] += options.p_release;
     }
     
     /*
@@ -167,9 +171,9 @@ void antSearch(vector<DataPoint> &data,
     for (size_t idx = 0; idx < data.size(); ++idx)
       if (accumulatedPheromone[idx])
       {
-	// ensure that no two threads will every update the same value at the same time
+	// ensure that no two threads will ever update the same value at the same time
       #pragma omp atomic
-	data[idx].pheromone() += accumulatedPheromone[idx];
+        pheromone[idx] += accumulatedPheromone[idx];
       }
   }
 }

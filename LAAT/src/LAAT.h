@@ -13,31 +13,39 @@
 #include "../lib/eigen/Core"
 #include "../lib/eigen/SVD"
 #include "readdata.h"
-#include "datapoint/datapoint.h"
 
 // main function implementing the LAAT algorithm
-void LocallyAlignedAntTechnique(std::vector<DataPoint> &data,
-				Options options);
+std::vector<float> LocallyAlignedAntTechnique(
+  std::vector<std::vector<float>> const &data,
+  Options options);
 
 // preprocessing functions
-size_t preprocess(std::vector<DataPoint> &data,
-		size_t radius,
-		float threshold);
-size_t RangeSearch(std::vector<DataPoint> &data,
+size_t preprocess(std::vector<std::vector<float>> const &data,
+		  size_t radius,
+		  float threshold,
+		  std::vector<std::vector<unsigned int>> &neighbourhoods,
+		  std::vector<std::vector<std::vector<float>>> &eigenVectors,
+		  std::vector<std::vector<float>> &eigenValues);
+size_t rangeSearch(std::vector<std::vector<float>> const &data,
 		   float radius,
-		   size_t threshold);
-std::vector<unsigned int> groupdata(std::vector<DataPoint> const &data,
+		   size_t threshold,
+		   std::vector<std::vector<unsigned int>> &neighbourhoods);
+std::vector<unsigned int> groupdata(std::vector<std::vector<float>> const &data,
 				    Options const &options);
 
 // iterative functions
-void initializeAnts(std::vector<DataPoint> &data,
-		    std::vector<DataPoint *> &ants,
+void initializeAnts(std::vector<std::vector<unsigned int>> const &neighbourhoods,
 		    std::vector<unsigned int> const &gd,
-		    size_t medianValue);
-void antSearch(std::vector<DataPoint> &data,
-	       std::vector<DataPoint *> const &initialpoint,
-	       Options const &options);
-void evaporatePheromone(std::vector<DataPoint> &data,
+		    size_t medianValue,
+		    std::vector<unsigned int> &antLocations);
+void antSearch(std::vector<std::vector<float>> const &data,
+	       std::vector<std::vector<unsigned int>> const &neighbourhoods,
+	       std::vector<unsigned int> const &antLocations,
+	       std::vector<std::vector<std::vector<float>>> const &eigenVectors,
+	       std::vector<std::vector<float>> const &eigenValues,
+	       Options const &options,
+  	       std::vector<float> &pheromone);
+void evaporatePheromone(std::vector<float> &pheromone,
 			Options const &options);
 
 // functions to communicate with the user

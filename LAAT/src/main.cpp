@@ -21,14 +21,14 @@ int main(int argc, char **argv)
     outputFileName = "pheromone.csv";
 
   // get data
-  vector<DataPoint> data = readdata(dataFileName);
+  vector<vector<float>> const data = readdata(dataFileName);
 
   // get options
   Options options = readOptions(optionFileName);
 
   // perform LAAT algorithm
-  LocallyAlignedAntTechnique(data, options);
+  vector<float> pheromone = LocallyAlignedAntTechnique(data, options);
 
   // write results
-  writeCSV(outputFileName, data);
+  writeCSV(outputFileName, pheromone);
 }

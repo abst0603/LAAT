@@ -19,36 +19,48 @@
  * @param data    vector containing all the data points to search
  * @param options struct containing the values of the hyper-parameters
  */
-void LocallyAlignedAntTechnique(vector<DataPoint> &data, Options options)
+vector<float> LocallyAlignedAntTechnique(vector<vector<float>> const &data,
+					 Options options)
 {
-  // set amount of lost ants to zero, only used to provide warnings/
+  // set amount of lost ants to zero, only used to provide warnings
   lostAnts = 0;
   
   omp_set_num_threads(8);
   Eigen::initParallel();
+
+  vector<vector<unsigned int>> neighbourhoods;
+  vector<vector<vector<float>>> eigenVectors;
+  vector<vector<float>> eigenValues;
+  
   // preprocess
   cout << "Preprocessing...\n";
   size_t medianvalue =
-    preprocess(data, options.threshold, options.radius);
+    preprocess(data, options.threshold, options.radius,
+	       neighbourhoods, eigenVectors, eigenValues);
   
   // group the data into a corresponding sector for each ant
   vector<unsigned int> gd = groupdata(data, options);
   
   // iterative step
-  cout << "\nPerforming ant search...\n";  
-  vector<DataPoint *> ants(
+  cout << "\nPerforming ant search...\n";
+  // initial locations of all ants at each iteration
+  vector<unsigned int> antLocations(
     options.numberOfAntsX * options.numberOfAntsY * options.numberOfAntsZ);
 
+  // initialize pheromone value for each data point to 1
+  vector<float> pheromone(data.size(), 1.0);
+  
   initializeProgressBar(options.numberOfIterations / 2);
   for (size_t loop = 0; loop < options.numberOfIterations; ++loop)
   {
     // place ants on random points as defined in formula (9)
-    initializeAnts(data, ants, gd, medianvalue);
+    initializeAnts(neighbourhoods, gd, medianvalue, antLocations);
 
-    antSearch(data, ants, options);
+    antSearch(data, neighbourhoods, antLocations,
+	      eigenVectors, eigenValues, options, pheromone);
 
     // apply evaporation of pheromone as defined in formula (1)
-    evaporatePheromone(data, options);
+    evaporatePheromone(pheromone, options);
     
     updateProgressBar(loop);
   }
@@ -56,5 +68,7 @@ void LocallyAlignedAntTechnique(vector<DataPoint> &data, Options options)
 
   // possibly warn user
   if (lostAnts)
-    printWarning(ants.size() * options.numberOfIterations * options.numberOfSteps);
+    printWarning(antLocations.size() * options.numberOfIterations * options.numberOfSteps);
+
+  return pheromone;
 }

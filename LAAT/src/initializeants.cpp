@@ -9,14 +9,13 @@
  * @param gd          vector containing the sector number for each data point
  * @param medianvalue the median number of neighbors over all data points
  */
-void initializeAnts(vector<DataPoint> &data,
-		    vector<DataPoint *> &ants,
+void initializeAnts(vector<vector<unsigned int>> const &neighbourhoods,
 		    vector<unsigned int> const &gd,
-		    size_t medianvalue)
+		    size_t medianvalue,
+  		    vector<unsigned int> &antLocations)
 {
-  // clear ants' locations
-  ants.assign(ants.size(), NULL);
-  size_t cnt = 0;
+  vector<bool> assigned(antLocations.size(), false);
+  size_t iter = 0;
   size_t initializedAnts = 0;
   /*
     when count reaches the size of the data we assume there
@@ -24,25 +23,27 @@ void initializeAnts(vector<DataPoint> &data,
     initialize the ants corresponding to this region with
     random suitable datapoints from other sectors.
   */
-  while (initializedAnts < ants.size() && cnt < data.size())
+  while (initializedAnts < antLocations.size() && iter < neighbourhoods.size())
   {
-    size_t currentPos = rand() % data.size();
+    size_t currentPos = rand() % neighbourhoods.size();
 
-    if (data[currentPos].getNeighbors().size() > medianvalue
-	&& ants[gd[currentPos]] == NULL)
+    if (neighbourhoods[currentPos].size() > medianvalue
+	&& !assigned[gd[currentPos]])
     {
-      ants[gd[currentPos]] = &data[currentPos];
+      antLocations[gd[currentPos]] = currentPos;
       ++initializedAnts;
     }
 
-    ++cnt;
+    ++iter;
   }
 
-  if (initializedAnts != ants.size())
+  if (initializedAnts != antLocations.size())
     // choose random points for uninitialized ants
-    for (size_t j = 0; j < ants.size(); ++j)
-      if (ants[j] == NULL)
+    for (size_t j = 0; j < antLocations.size(); ++j)
+    {
+      if (!assigned[j])
 	do
-	  ants[j] = &data[rand() % data.size()];
-	while (ants[j]->getNeighbors().size() <= medianvalue);
+	  antLocations[j] = rand() % neighbourhoods.size();
+	while (neighbourhoods[antLocations[j]].size() <= medianvalue);
+    }
 }

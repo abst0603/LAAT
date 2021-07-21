@@ -8,11 +8,11 @@
  *                pheromones to.
  * @param options struct containing the values of the hyper-parameters
  */
-void evaporatePheromone(vector<DataPoint> &data, Options const &options)
+void evaporatePheromone(vector<float> &pheromone, Options const &options)
 {
-  for (DataPoint &dataPoint : data)
+  for (float &pher : pheromone)
   {
-    float newPheromone = (1 - options.EvapRate) * dataPoint.getPheromone();
+    float newPheromone = (1 - options.EvapRate) * pher;
     
     if (newPheromone < options.lowerlimit)
       newPheromone = options.lowerlimit;
@@ -20,6 +20,6 @@ void evaporatePheromone(vector<DataPoint> &data, Options const &options)
     if(newPheromone > options.upperlimit)
       newPheromone = options.upperlimit;
 
-    dataPoint.setPheromone(newPheromone);
+    pher = newPheromone;
   }
 }
