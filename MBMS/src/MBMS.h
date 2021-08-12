@@ -4,17 +4,13 @@
 #include "KDTreeVectorOfVectorsAdaptor.h"
 #include "Eigen/Core"
 #include "Eigen/SVD"
-#include "nanoflann.hpp"
-#include "utils.h"
+#include "nanoflann/nanoflann.hpp"
 #include <iosfwd>
 
 void MBMS(std::vector<std::vector<float>> &data,
 	  float radius = 0.5,
 	  float sigma = 0.25,
 	  size_t k = 10);
-
-void convertToCloud(PointCloud<float> &point, std::vector<std::vector<float>> &data);
-
 
 void denoise(std::vector<std::vector<float>> const &data,
              std::vector<size_t> const &indices,
