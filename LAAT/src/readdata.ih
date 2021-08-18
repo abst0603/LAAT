@@ -1,4 +1,0 @@
-#include "readdata.h"
-#include "datapoint/datapoint.h"
-
-using namespace std;
