@@ -18,11 +18,7 @@ int main(int argc, char **argv)
 
   vector<vector<float>> data = readCSV(argv[1], 3);
 
-  for (int iter = 0; iter < maxiter; ++iter)
-  {
-    cout << "starting round " << iter + 1 << '\n';
-    MBMS(data, radius, sigma2, k);
-  }
+  modifiedBlurringMeanShift(data, maxiter, radius, sigma2, k);
 
   writeCSV("result.csv", data);
 }

@@ -1,16 +1,15 @@
 #ifndef INCLUDED_MBMS_H
 #define INCLUDED_MBMS_H
 
-#include "utils/KDTreeVectorOfVectorsAdaptor.h"
 #include "Eigen/Core"
 #include "Eigen/SVD"
-#include "nanoflann/nanoflann.hpp"
 #include <iosfwd>
 
-void MBMS(std::vector<std::vector<float>> &data,
-	  float radius = 0.5,
-	  float sigma = 0.25,
-	  size_t k = 10);
+void modifiedBlurringMeanShift(std::vector<std::vector<float>> &data,
+			       size_t iter = 10,
+			       float radius = 0.5,
+			       float sigma = 0.25,
+			       size_t k = 10);
 
 void denoise(std::vector<std::vector<float>> const &data,
              std::vector<size_t> const &indices,

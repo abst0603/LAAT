@@ -4,5 +4,6 @@ using namespace std;
 #include <fstream>
 #include <iostream>
 #include <random>
+#include "utils/KDTreeVectorOfVectorsAdaptor.h"
 
 typedef KDTreeVectorOfVectorsAdaptor<vector<vector<float>>, float> KNN_kd_tree;
