@@ -5,7 +5,7 @@
 #include "Eigen/SVD"
 #include <iosfwd>
 
-void modifiedBlurringMeanShift(std::vector<std::vector<float>> &data,
+void manifoldBlurringMeanShift(std::vector<std::vector<float>> &data,
 			       size_t iter = 10,
 			       float radius = 0.5,
 			       float sigma = 0.25,
@@ -33,10 +33,5 @@ void kernelFunMean(std::vector<std::vector<float>> const &data,
 		   std::vector<float> &kernelmean,
 		   size_t idx,
 		   float sigma);
-
-std::vector<std::vector<float>> readCSV(std::string const &name_of_file, size_t dim);
-
-void writeCSV(std::string const &name_of_file,
-	      std::vector<std::vector<float>> vec);
 
 #endif

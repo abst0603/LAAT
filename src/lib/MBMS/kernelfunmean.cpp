@@ -1,5 +1,15 @@
 #include "MBMS.ih"
 
+/**
+ * Kernel Function.
+ *
+ * @param data vector containing the daga points
+ * @param indices indices of the nearest neighbours of the current point
+ * @param kernelMean will store the kernel means
+ * @param idx index of the current point
+ * @param sigma2 the value of 2 * sigma * sigma, sigma being the scale of
+ *   the shift
+ */
 void kernelFunMean(vector<vector<float>> const &data,
 		   vector<size_t> const &indices,
 		   vector<float> &kernelMean,
@@ -18,25 +28,9 @@ void kernelFunMean(vector<vector<float>> const &data,
       dist2 += pow(data[idx][j] - data[indices[i]][j], 2);
     K[i] = exp(-dist2 / sigma2) ;
     sumK += K[i];
-    if (sumK == 0)
-    {
-      cout << "exp(" << -dist2 << " / " << sigma2 << ") = " << exp(-dist2 / sigma2) << '\n';
-      cout << "datapoint " << idx << " ["
-	   << data[idx][0] << ','
-	   << data[idx][1] << ','
-	   << data[idx][2] << "]\n";
-      cout << "neighbour "<< i << " -> " << indices[i] << " ["
-	   << data[indices[i]][0] << ','
-	   << data[indices[i]][1] << ','
-	   << data[indices[i]][2] << "]\n";
-    }
   }
 
   for (size_t i = 0; i < indices.size(); ++i)
     for (size_t j = 0; j < D; ++j)
-    {
-      if (sumK == 0)
-	cout << "zero sumK\n";
       kernelMean[j] += K[i] * data[indices[i]][j] / sumK;
-    }
 }

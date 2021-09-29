@@ -4,10 +4,11 @@
  * choose the initial points so that their neighborhood size is bigger
  * or equal to the median number of neighbors.
  *
- * @param data        vector containing all data points
- * @param ants        vector of ants to choose the initial points for
- * @param gd          vector containing the sector number for each data point
+ * @param data vector containing all data points
+ * @param ants vector of ants to choose the initial points for
+ * @param gd vector containing the sector number for each data point
  * @param medianvalue the median number of neighbors over all data points
+ * @param antLocations vector to store the initial locations in
  */
 void initializeAnts(vector<vector<unsigned int>> const &neighbourhoods,
 		    vector<unsigned int> const &gd,

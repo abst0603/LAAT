@@ -11,9 +11,22 @@
  * is used to ensure thread safety.
  *
  * @param data vector containing the data points to search on
- * @param ants vector containing for each ant the initial point to start
- *   searching from
- * @param options struct containing the values of the hyper-parameters
+ * @param neighbourhoods vector containing a vector of all nearest
+ *   neighbours for each data point
+ * @param antLocations vector containing for each ant the initial point
+ *   to start searching from
+ * @param eigenVectors vector containing the eigen vectors for each data
+ *   point
+ * @param eigenValues vector containing the eigen values for each data
+ *   point
+ * @param numberOfSteps number of steps to run each ant at each iteration
+ * @param beta the inverse temperature as used in formula (8)
+ * @param kappa tuning parameter for the relative importance of the
+ *   influence of the alignment and pheromone terms as used in formula (7)
+ * @param p_release amount of pheromone to release on a data point at each
+ *   visit
+ * @param pheromone vector containing the pheromone of each data point, will
+ *   be updated by this function
  */
 void antSearch(vector<vector<float>> const &data,
 	       vector<vector<unsigned int>> const &neighbourhoods,
@@ -50,19 +63,25 @@ void antSearch(vector<vector<float>> const &data,
       P.resize(neighbourhood.size());
 
       float sumPheromone = 0;  // total pheromone in local neighbourhood
-      for (size_t neighbourIdx = 0; neighbourIdx < neighbourhood.size(); ++neighbourIdx)
+      for (size_t neighbourIdx = 0;
+	   neighbourIdx < neighbourhood.size();
+	   ++neighbourIdx)
       {
 	vector<float> const &neighbour = data[neighbourhood[neighbourIdx]];
 	sumPheromone += pheromone[neighbourhood[neighbourIdx]];
 	
 	for (size_t dim = 0; dim < 3; ++dim)
-	  relativeDistances[neighbourIdx][dim] = neighbour[dim] - currentPoint[dim];
+          relativeDistances[neighbourIdx][dim] =
+	    neighbour[dim] - currentPoint[dim];
 	
 	// normalize distance
 	float norm = sqrt(
-	  relativeDistances[neighbourIdx][0] * relativeDistances[neighbourIdx][0] +
-	  relativeDistances[neighbourIdx][1] * relativeDistances[neighbourIdx][1] +
-	  relativeDistances[neighbourIdx][2] * relativeDistances[neighbourIdx][2]);
+	  relativeDistances[neighbourIdx][0] *
+	  relativeDistances[neighbourIdx][0] +
+	  relativeDistances[neighbourIdx][1] *
+	  relativeDistances[neighbourIdx][1] +
+	  relativeDistances[neighbourIdx][2] *
+	  relativeDistances[neighbourIdx][2]);
 
 	for (float &dim : relativeDistances[neighbourIdx])
 	  dim /= norm;
@@ -74,7 +93,9 @@ void antSearch(vector<vector<float>> const &data,
       */
       vector<array<float, 3>> w(neighbourhood.size());
       // matrix multiplication
-      for (size_t neighbour = 0; neighbour < neighbourhood.size(); ++neighbour)
+      for (size_t neighbour = 0;
+	   neighbour < neighbourhood.size();
+	   ++neighbour)
 	for (size_t j = 0; j < 3; ++j)
 	  w[neighbour][j] = abs(
 	    relativeDistances[neighbour][0] * eigenVectors[current][0][j] +
@@ -94,8 +115,8 @@ void antSearch(vector<vector<float>> const &data,
       }
 
       /*
-	For each data point, compute the preference of moving to it's neighbours
-	according to formula (4).
+	For each data point, compute the preference of moving to it's
+	neigbours according to formula (4).
       */
       vector<float> E(neighbourhood.size());
       float sumE = 0;
@@ -123,8 +144,8 @@ void antSearch(vector<vector<float>> const &data,
 	    pheromone[neighbour] / sumPheromone;
 
 	  /*
-	    Normalize movement preferences within the neighbourhood to obtain the
-	    relative preference according to formula (5).
+	    Normalize movement preferences within the neighbourhood to
+	    obtain the relative preference according to formula (5).
 	  */
 	  float preference = E[j] / sumE;
 
@@ -140,8 +161,8 @@ void antSearch(vector<vector<float>> const &data,
       }
       
       /*
-	Calculate jump probabilities to all of the current point's neighbours,
-	store as cummulative probabilities for easy selection.
+	Calculate jump probabilities to all of the current point's
+	neighbours, store as cummulative probabilities for easy selection.
       */
       float cummulativeProbability = 0.0;
       size_t itemp = 0;
@@ -157,7 +178,10 @@ void antSearch(vector<vector<float>> const &data,
 
       current = neighbourhood[itemp];
 
-      // if there are no active neighbours, update counter for sake of warning the user
+      /*
+	if there are no active neighbours, update counter for sake of 
+	warning the user
+      */
       if (neighbourhoods[current].empty())
       {
         ++lostAnts;
@@ -174,7 +198,10 @@ void antSearch(vector<vector<float>> const &data,
     for (size_t idx = 0; idx < data.size(); ++idx)
       if (accumulatedPheromone[idx])
       {
-	// ensure that no two threads will ever update the same value at the same time
+	/*
+	  ensure that no two threads will ever update the same value at
+	  the same time
+	*/
       #pragma omp atomic
         pheromone[idx] += accumulatedPheromone[idx];
       }

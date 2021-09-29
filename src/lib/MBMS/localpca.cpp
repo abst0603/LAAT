@@ -1,5 +1,14 @@
 #include "MBMS.ih"
 
+/**
+ * Perform local PCA using the given neighbourhood to find eigen-values and
+ * -vectors.
+ *
+ * @param data vector containing the data points
+ * @param indices indices of the neighbourhood of points
+ * @param eigenValue will store the eigen values
+ * @param eigenVector will store the eigen vectors
+ */
 void localPCA(vector<vector<float>> const &data,
               vector<size_t> const &indices,
               vector<float> &eigenValue,

@@ -7,9 +7,12 @@
  * each data point and it's neighbours.
  *
  * @param data vector containing the data points to preprocess
- * @param threshold amount of neighbours a data point should at least
- *        have to be included in the search
  * @param radius the radius of the neighbourhood for each data point
+ * @param threshold amount of neighbours a data point should at least
+ *   have to be included in the search
+ * @param neighbourhoods vector to store the neighbourhoods in
+ * @param eigenVectors vector to store the eigen vectors in
+ * @param eigenValues vector to store the eigen values in
  * @return median neighbourhood size of all data points
  */
 size_t preprocess(vector<vector<float>> const &data,

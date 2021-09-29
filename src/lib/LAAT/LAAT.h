@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <array>
-#include <numeric> // for std::accumulate
+#include <numeric>
 #include <cmath>
 #include <algorithm>
 #include <cstdlib>

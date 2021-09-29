@@ -116,14 +116,14 @@ class CMakeBuild(build_ext):
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
-    name="Cosmic_Web_Example",
-    version="0.0.1",
-    author="Abolfazl Taghribi",
-    author_email="",
-    description="A test project using pybind11 and CMake",
-    long_description="",
-    ext_modules=[CMakeExtension("LAAT")],
+    name="CosmicWeb",
+    version="1.0.0",
+    author="Abolfazl Taghribi, Joel During",
+    author_email="abolfazl.taghribi@gmail.com, jduring1999@gmail.com",
+    description="Cosmic Web module containing the LAAT and MBMS algorithms.",
+    long_description="A module containing the Locally Aligned Ant Technique (LAAT) and Manifold Blurring Mean Shift (MBMS) algorithms. These algorithms can be used together to study manifold within large datasets, for example to study the structure of the cosmic web.",
+    ext_modules=[CMakeExtension("COSMIC_WEB")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
-    extras_require={"test": ["pytest"]},
+    extras_require={"test": ["pytest"]}
 )

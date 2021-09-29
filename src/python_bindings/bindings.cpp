@@ -8,6 +8,12 @@
 namespace py = pybind11;
 using namespace py::literals;
 
+/**
+ * Binding function to use the LAAT algorithm from Python.
+ *
+ * The function expects a Numpy array containing the data, and returns a Numpy
+ * array containing the pheromone resulting from LAAT.
+ */
 py::array LAAT(py::array_t<float> in,
 	       size_t numberOfAntsX,
 	       size_t numberOfAntsY,
@@ -49,6 +55,12 @@ py::array LAAT(py::array_t<float> in,
   return ret;
 }
 
+/**
+ * Binding function to use the MBMS algorithm from Python.
+ *
+ * The function expects a Numpy array containing the data, and returns a Numpy
+ * array containing updated data after MBMS has been applied.
+ */
 py::array MBMS(py::array_t<float> in,
 	       size_t iter,
 	       float radius,
@@ -64,14 +76,14 @@ py::array MBMS(py::array_t<float> in,
     for (size_t j = 0; j < 3; ++j)
       data[i][j] = npData[i + j * size];
 
-  modifiedBlurringMeanShift(data, iter, radius, sigma, k);
+  manifoldBlurringMeanShift(data, iter, radius, sigma, k);
 
   return py::array(py::cast(data));
 }
 
-PYBIND11_MODULE(LAAT, m)
+PYBIND11_MODULE(CosmicWeb, m)
 {
-  m.doc() = "Cosmic Web module for Python";
+  m.doc() = "Cosmic Web module for Python. Contains the LAAT and MBMS functions";
 
   m.def("LAAT", &LAAT, "Locally Aligned Ant Technique algorithm",
 	"in"_a,
@@ -89,7 +101,7 @@ PYBIND11_MODULE(LAAT, m)
 	"lowerlimit"_a = 0.0001,
 	"upperlimit"_a = 10);
 
-  m.def("MBMS", &MBMS, "Modified Blurring Mean Shift algorithm",
+  m.def("MBMS", &MBMS, "Manifold Blurring Mean Shift algorithm",
 	"in"_a,
 	"iter"_a = 10,
 	"radius"_a = 3,

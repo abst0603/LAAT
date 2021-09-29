@@ -2,22 +2,41 @@
 
 
 /**
- * Implementation of the Ant Colony algorithm proposed by Taghribi et al. (2020).
+ * Implementation of the Ant Colony algorithm proposed by Taghribi et al.
+ * (2020).
  * See Algorithm 1 in the paper for a pseudocode of this algorithm.
  *
- * When the function is done data points contain the amount of pheromone obtained 
- * in the search.
- *
- * In this function and all of the functions evoked by this one we will refer to the
- * formulas as described by Taghribi et al. (2020).
+ * In this function and all of the functions evoked by this one we will refer
+ * to the formulas as described by Taghribi et al. (2020).
  *
  * Reference:
- * Taghribi, A., Bunte, K., Smith, R., Shin, J., Mastropietro, M., Peletier, R. F., 
- * & Tino, P. (2020). LAAT: Locally Aligned Ant Technique for detecting manifolds of
- * varying density. arXiv preprint arXiv:2009.08326.
+ * Taghribi, A., Bunte, K., Smith, R., Shin, J., Mastropietro, M., Peletier,
+ * R. F., & Tino, P. (2020). LAAT: Locally Aligned Ant Technique for detecting
+ * manifolds of varying density. arXiv preprint arXiv:2009.08326.
  *
- * @param data    vector containing all the data points to search
- * @param options struct containing the values of the hyper-parameters
+ * @param data vector containing all the data points to search
+ * @param numberOfAntsX number of ants to be distributed along the `x` 
+ *   dimension
+ * @param numberOfAntsY number of ants to be distributed along the `y`
+ *   dimension
+ * @param numberOfAntsZ number of ants to be distributed along the `z`
+ *   dimension
+ * @param numberOfIterations number of tiems to apply ant search
+ * @param numberOfSteps number of steps to run each ant at each iteration
+ * @param threshold minimum number of nearest neighbours needed for a datapoint
+ *   to be considered
+ * @param radius radius within which to search for nearest neighbours
+ * @param beta the inverse temperature as used in formula (8)
+ * @param kappa tuning parameter for the relative importance of the influence
+ * of the alignment and pheromone terms as used in formula (7)
+ * @param p_release amount of pheromone to release on a data point at each 
+ *   visit
+ * @param evapRate rate at which to evaporate pheromone after each application
+ *   of ant search
+ * @param lowerlimit lower limit on the amount of pheromone of a data point
+ * @param upperlimit upper limit on the amount of pheromone of a data point
+ * @return vector containing the amount of pheromone for each data point after
+ *   the application of LAAT
  */
 vector<float> LocallyAlignedAntTechnique(
   vector<vector<float>> const &data,
@@ -37,7 +56,8 @@ vector<float> LocallyAlignedAntTechnique(
 {
   // set amount of lost ants to zero, only used to provide warnings
   lostAnts = 0;
-  
+
+  // initialize parallelization with a default of 8 threads
   omp_set_num_threads(8);
   Eigen::initParallel();
 
@@ -52,7 +72,8 @@ vector<float> LocallyAlignedAntTechnique(
 	       neighbourhoods, eigenVectors, eigenValues);
   
   // group the data into a corresponding sector for each ant
-  vector<unsigned int> gd = groupdata(data, numberOfAntsX, numberOfAntsY, numberOfAntsZ);
+  vector<unsigned int> gd =
+    groupdata(data, numberOfAntsX, numberOfAntsY, numberOfAntsZ);
   
   // iterative step
   cout << "\nPerforming ant search...\n";

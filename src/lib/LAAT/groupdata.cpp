@@ -5,7 +5,12 @@
  * into it's corresponding sector.
  *
  * @param data    vector containing the data to group
- * @param options struct containing the values of the hyper-parameters
+ * @param numberOfAntsX number of ants to be distributed along the `x` 
+ *   dimension
+ * @param numberOfAntsY number of ants to be distributed along the `y`
+ *   dimension
+ * @param numberOfAntsZ number of ants to be distributed along the `z`
+ *   dimension
  * @return        vector containing the sector number for each data point
  */
 vector<unsigned int> groupdata(vector<vector<float>> const &data,

@@ -1,15 +1,32 @@
 #include "MBMS.ih"
 
-void modifiedBlurringMeanShift(vector<vector<float>> &data,
+/**
+ * Implementation of the Manifold Blurring Mean Shift (MBMS) proposed by Wang
+ * & Carreira-Perpinán (2010).
+ * See Figure 1 in the paper for a pseudocode of this algorithm.
+ *
+ * Reference:
+ * Wang, W., & Carreira-Perpinán, M. A. (2010, June). Manifold blurring mean
+ * shift algorithms for manifold denoising. In 2010 IEEE Computer Society
+ * Conference on Computer Vision and Pattern Recognition (pp. 1759-1766). IEEE.
+ *
+ * @param data vector containing all the data points to apply MBMS to, this
+ *   data will be shifted as a result of the MBMS algorithm
+ * @param iter amount of times to apply MBMS
+ * @param radius radius within which to search for nearest neighbours
+ * @param sigma scale of the shift
+ * @param k number of nearest neighbours used to estimate the local tangent
+ *   space
+ */
+void manifoldBlurringMeanShift(vector<vector<float>> &data,
 			       size_t iter,
 			       float radius,
 			       float sigma,
 			       size_t k)
 {
-  srand(42);
+  srand(random_device()());
   for (size_t i = 0; i < iter; ++i)
   {
-    cout << i << '\n';
     size_t D = data[0].size();
 
     // initialise k-d trees for neighbour search
@@ -45,7 +62,8 @@ void modifiedBlurringMeanShift(vector<vector<float>> &data,
 	vector<float> distsSqr(k);
 	resultSet.init(&retIndices[0], &distsSqr[0]);
 
-	KNN.index->findNeighbors(resultSet, &data[idx][0], nanoflann::SearchParams(10));
+	KNN.index->findNeighbors(
+	  resultSet, &data[idx][0], nanoflann::SearchParams(10));
 	for (unsigned int i = 0; i < k; ++i)
 	  neighbours[i] = retIndices[i];
       }
@@ -56,7 +74,8 @@ void modifiedBlurringMeanShift(vector<vector<float>> &data,
       localPCA(data, neighbours, eigenValue, eigenVector);
 
       // subtract parallel motion
-      denoise(data, neighbours, eigenValue, eigenVector, dataOut, sigma, idx);
+      denoise(data, neighbours, eigenValue, eigenVector,
+	      dataOut, sigma, idx);
     }
 
     // update data

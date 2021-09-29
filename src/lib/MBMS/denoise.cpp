@@ -1,5 +1,16 @@
 #include "MBMS.ih"
 
+/**
+ * Shift the data points by subtracting the parallel motion.
+ *
+ * @param data vector containing all the data points
+ * @param indices indices of the neighbours of the current point
+ * @param evalue eigen values of the current point
+ * @param evector eigen vectors of the current point
+ * @param updatedData vector to store the updated data in
+ * @param sigma scale of the shift
+ * @param idx idx of the current point
+ */
 void denoise(vector<vector<float>> const &data,
              vector<size_t> const &indices,
              vector<float> const &evalue,

@@ -19,7 +19,8 @@ size_t median(vector<size_t> &data);
  * @param data      vector containing the data to find the neighborhoods of
  * @param radius    the radius of each neighborhood
  * @param threshold minimum number of neighbors needed for the data to be
- *                  included
+ *   included
+ * @param neighbourhoods vector to store the neighbourhoods in
  * @return          the median number of neighbors over all data points
  */
 size_t rangeSearch(vector<vector<float>> const &data,
