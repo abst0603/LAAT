@@ -81,7 +81,7 @@ py::array MBMS(py::array_t<float> in,
   return py::array(py::cast(data));
 }
 
-PYBIND11_MODULE(CosmicWeb, m)
+PYBIND11_MODULE(cosmicweb, m)
 {
   m.doc() = "Cosmic Web module for Python. Contains the LAAT and MBMS functions";
 

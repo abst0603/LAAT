@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(CosmicWeb VERSION 1.0)
+project(cosmicweb VERSION 1.0)
 
 # Threads
 find_package(Threads REQUIRED)
@@ -39,5 +39,5 @@ target_include_directories(cosmicweblib PUBLIC src/lib)
 target_link_libraries(cosmicweblib Eigen3::Eigen OpenMP::OpenMP_CXX)
 
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11")
-pybind11_add_module(CosmicWeb src/python_bindings/bindings.cpp)
-target_link_libraries(CosmicWeb PRIVATE cosmicweblib)
+pybind11_add_module(cosmicweb src/python_bindings/bindings.cpp)
+target_link_libraries(cosmicweb PRIVATE cosmicweblib)

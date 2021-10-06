@@ -54,6 +54,8 @@ vector<float> LocallyAlignedAntTechnique(
   float lowerlimit,
   float upperlimit)
 {
+  cout << "Running the Locally Aligned Ant Technique algorithm on "
+       << data.size() << " data points\n\n";
   // set amount of lost ants to zero, only used to provide warnings
   lostAnts = 0;
 
@@ -113,5 +115,6 @@ vector<float> LocallyAlignedAntTechnique(
   if (lostAnts)
     printWarning(antLocations.size() * numberOfIterations * numberOfSteps);
 
+  cout << "Locally Aligned Ant Technique algorithm completed\n\n";
   return pheromone;
 }

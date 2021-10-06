@@ -24,6 +24,8 @@ void manifoldBlurringMeanShift(vector<vector<float>> &data,
 			       float sigma,
 			       size_t k)
 {
+  cout << "Running the Manifold Blurring Mean Shift algorithm on "
+       << data.size() << " data points\n\n";
   srand(random_device()());
   for (size_t i = 0; i < iter; ++i)
   {
@@ -81,4 +83,6 @@ void manifoldBlurringMeanShift(vector<vector<float>> &data,
     // update data
     data = dataOut;
   }
+
+  cout << "Manifold Blurring Mean Shift algorithm completed\n\n";
 }
