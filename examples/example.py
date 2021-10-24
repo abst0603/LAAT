@@ -22,12 +22,11 @@ pheromone = cosmicweb.LAAT(data,
                            lowerlimit=0.0001,
                            upperlimit=10)
 
-threshold = 0.7  # phermone threshold
+threshold = 0.7  # pheromone threshold
 
 # use the pheromone values and the threshold to select which datapoints to use
 # for MBMS
-selectedData = [datapoint for datapoint, pheromone in zip(data, pheromone)
-                if pheromone > threshold]
+selectedData = data[pheromone > threshold]
 
 # run the MBMS algorithm on the selected data points with the specified
 # hyper-parameter values, store the resulting shifted data
