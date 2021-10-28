@@ -2,6 +2,7 @@
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 #include <iostream>
+#include <fstream>
 #include "LAAT/LAAT.h"
 #include "MBMS/MBMS.h"
 
@@ -69,12 +70,13 @@ py::array MBMS(py::array_t<float> in,
 {
   auto buf = in.request();
   float *npData = static_cast<float *>(buf.ptr);
+
   size_t size = buf.shape[0];
   std::vector<std::vector<float>> data(size, std::vector<float>(3));
 
   for (size_t i = 0; i < size; ++i)
     for (size_t j = 0; j < 3; ++j)
-      data[i][j] = npData[i + j * size];
+      data[i][j] = npData[i * 3 + j];
 
   manifoldBlurringMeanShift(data, iter, radius, sigma, k);
 
