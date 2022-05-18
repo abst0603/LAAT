@@ -1,0 +1,13 @@
+#include "LAAT.h"
+
+#include <iterator>
+#include <iostream>
+#include <omp.h>
+
+using namespace std;
+
+/*
+  global variable that counts the number of lost ants to possible give the
+  user a warning.
+*/
+extern size_t lostAnts;
