@@ -2,8 +2,8 @@
 To install this module from source, you will need to install a suitable C++ compiler and CMake. Any other external dependencies of this project are included as git submodules and they must be initialized when this repository is cloned:
 
 ```sh
-git clone https://github.com/abst0603/CosmicWeb.git
-cd CosmicWeb
+git clone https://github.com/abst0603/LAAT.git
+cd LAAT
 git submodule update --init
 ```
 
