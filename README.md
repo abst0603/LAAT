@@ -40,6 +40,12 @@ cmake ..
 make
 ```
 
+#Matlab
+You don't need to install anything to use Matlab functions. The code written in Matlab is standalone, however, it is also much slower than python and C++ code. We don't recommend to use Matlab code for a dataset larger than 100,000 samples. You first need to run the "preprocessing" and then use that as an input for "LAAT".
+```Matlab
+pstruct = PreprocessLAAT(Data,'Radius',0.5,'Threshold',3)
+pheromone = LAAT(pstruct,'Option','option.mat')
+```
 Now the build directory will create both the static C++ library file `libcosmicweblib.a` and the Python module binary file `cosmicweb.cpython`.
 
 # How to cite this work
