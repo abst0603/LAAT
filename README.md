@@ -16,12 +16,12 @@ pip install .
 The module can now be imported and used in python:
 
 ```python
-import CosmicWeb
-pheromone = CosmicWeb.LAAT(...)
+import laat
+pheromone = laat.LAAT(...)
 ```
 
 # Usage
-An example of the usage of the CosmicWeb module can be found in the `examples` folder. After the CosmicWeb module for Python has been installed, the example can be run with:
+An example of the usage of the LAAT module can be found in the `examples` folder. After the LAAT module for Python has been installed, the example can be run with:
 
 ```sh
 cd examples
@@ -40,7 +40,7 @@ cmake ..
 make
 ```
 
-Now the build directory will create both the static C++ library file `libcosmicweblib.a` and the Python module binary file `cosmicweb.cpython`.
+Now the build directory will create both the static C++ library file `liblaatlib.a` and the Python module binary file `laat.cpython`.
 
 # Matlab
 You don't need to install anything to use Matlab functions. The code written in Matlab is standalone, however, it is also much slower than python and C++ code. We don't recommend to use Matlab code for a dataset larger than 100,000 samples. You first need to run the "preprocessing" and then use that as an input for "LAAT".

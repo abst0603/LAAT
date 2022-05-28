@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(cosmicweb VERSION 1.0)
+project(laat VERSION 1.0)
 
 # Threads
 find_package(Threads REQUIRED)
@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall -fPIC")
 
-add_library(cosmicweblib
+add_library(laatlib
     src/lib/LAAT/antsearch.cpp
     src/lib/LAAT/evaporatepheromone.cpp
     src/lib/LAAT/groupdata.cpp
@@ -33,11 +33,11 @@ add_library(cosmicweblib
 )
 
 # add include directories to use when compiling the target
-target_include_directories(cosmicweblib PRIVATE ext)
-target_include_directories(cosmicweblib PUBLIC src/lib)
+target_include_directories(laatlib PRIVATE ext)
+target_include_directories(laatlib PUBLIC src/lib)
 
-target_link_libraries(cosmicweblib Eigen3::Eigen OpenMP::OpenMP_CXX)
+target_link_libraries(laatlib Eigen3::Eigen OpenMP::OpenMP_CXX)
 
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11")
-pybind11_add_module(cosmicweb src/python_bindings/bindings.cpp)
-target_link_libraries(cosmicweb PRIVATE cosmicweblib)
+pybind11_add_module(laat src/python_bindings/bindings.cpp)
+target_link_libraries(laat PRIVATE laatlib)
