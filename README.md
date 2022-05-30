@@ -49,5 +49,17 @@ pstruct = PreprocessLAAT(Data,'Radius',0.5,'Threshold',3)
 pheromone = LAAT(pstruct,'Option','option.mat')
 ```
 
-# How to cite this work
-The manuscript associated with this software has been submitted and is under peer review at the moment. You can find a pre-print to the current version here on [arXiv](https://arxiv.org/abs/2009.08326).
+# Citing
+If you use LAAT in your research, please cite [LAAT: Locally Aligned Ant Technique for discovering multiple faint low dimensional structures of varying density](https://ieeexplore.ieee.org/abstract/document/9780217)
+```
+@ARTICLE{9780217,
+author={Taghribi, Abolfazl and Bunte, Kerstin and Smith, Rory and Shin, Jihye and Mastropietro, Michele and Peletier, Reynier F. and Tiňo, Peter},
+journal={IEEE Transactions on Knowledge and Data Engineering},
+title={LAAT: Locally Aligned Ant Technique for discovering multiple faint low dimensional structures of varying density},
+year={2022},
+volume={},
+number={},
+pages={1-1},
+doi={10.1109/TKDE.2022.3177368}
+}
+```
