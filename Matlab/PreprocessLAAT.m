@@ -1,5 +1,5 @@
-function [pstruct] = PreprocessAntPCA(Data,varargin)
-%PreprocessAntPCA This function compute neighbor points for each point and then compute
+function [pstruct] = PreprocessLAAT(Data,varargin)
+%PreprocessLAAT This function compute neighbor points for each point and then compute
 %   eigenvalues and eigenvectors in this neighborhood. Note that if there
 %   are not enough points in the neighborhood of a specific point the point
 %   will be omitted from the dataset.
@@ -12,7 +12,7 @@ function [pstruct] = PreprocessAntPCA(Data,varargin)
 %   of each point, eigen value and eigen vectors and the information about
 %   the preprocessing
 if nargin > 5
-    error('PreprocessAntPCA:TooManyInputs', ...
+    error('PreprocessLAAT:TooManyInputs', ...
         'requires at most 5 optional inputs');
 end
 if nargin == 2 || nargin == 4

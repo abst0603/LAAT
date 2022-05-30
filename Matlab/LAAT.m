@@ -1,12 +1,12 @@
 function [pheromone] = LAAT(instruct,varargin)
 % Apply LAAT in a neighbourhood.
-%   instruct: the output of function PreprocessAntPCA.
+%   instruct: the output of function PreprocessLAAT.
 %	'Plot_data' if it is 1 then it will plot the result after each iteration.
 %	if it is 0 it will not plot anything.
 %	'Option' importing the option for the algorithm from a '.mat' file. There
 %	is a sample for this file in the folder.
 if nargin > 3
-    error('PreprocessAntPCA:TooManyInputs', ...
+    error('LAAT:TooManyInputs', ...
         'requires at most 3 optional inputs');
 end
 % defult values for threshold and radius
