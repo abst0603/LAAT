@@ -49,6 +49,19 @@ pstruct = PreprocessLAAT(Data,'Radius',0.5,'Threshold',3)
 pheromone = LAAT(pstruct,'Option','option.mat')
 ```
 
+# Parameter configuration
+To understand the role of each parameter, we highly suggest reading our paper as cited in the following. In summary, there are some rules of thumb and points one should consider when setting the parameters. We discuss each of them individually as follows.
+
+`Pheromone` ($\zeta$): This is the constant amount of pheromone each ant deposits on a point when visiting the point. It can be any number, since only the ratio of pheromone on the point to other points is essential, not the exact value. We usually set it as 0.05.
+
+`Evaporation rate` ($\varphi$): This parameter determines the pace of pheromone evaporation. It should be a value between 0 to 1. Closer to 0, ants pay attention to a high concentration of pheromone greedily, and closer to 1, high evaporation causes noisy behavior of ants. (default = 0.1)
+
+`Kappa` ($\kappa$): $\kappa$ value can vary between 0 to 1, where 0 means only pheromone is influential in determining an ant's next step, and a value of 1 forces the ants to choose only based on the alignment of the neighboring data points.
+
+`Beta` ($\beta$): For information about its interpretation please visit our paper. $\beta=10$ works perfectly for all datasets we have tried.
+
+The other three parameters, namely `number of ants`, `number of steps`, and `number of iterations` are not independent, and we also discuss them combined. The higher the value for these parameters, the algorithm converges better on the structures. However, if the multiplication of these three numbers is higher than 10 to 100 times the total number of dataset points, the algorithm will converge. We suggest bounding the `number of iterations` to a smaller number (default = 100) and increasing the `number of steps` as much as possible. Increasing the `number of ants` gives more exploration power to the algorithm.
+
 # Citing
 If you use LAAT in your research, please cite [LAAT: Locally Aligned Ant Technique for discovering multiple faint low dimensional structures of varying density](https://ieeexplore.ieee.org/abstract/document/9780217)
 ```
